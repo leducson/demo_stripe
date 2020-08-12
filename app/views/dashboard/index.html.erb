@@ -1,0 +1,25 @@
+<div class="jumbotron">
+  <% @products.limit(6).each do |product| %>
+    <div class="card" style="width: 16rem;">
+      <img src="http://via.placeholder.com/286x180" class="card-img-top">
+      <div class="card-body">
+        <h5 class="card-title"><%= product.name %></h5>
+        <p class="card-text"><%= number_to_currency(product.price) %></p>
+        <a href="#" class="btn btn-primary">Payment</a>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .jumbotron {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    justify-content: space-between;
+  }
+
+  .jumbotron .card {
+    margin: 10px;
+  }
+</style>
