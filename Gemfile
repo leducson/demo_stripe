@@ -25,6 +25,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'devise'
 gem 'devise-bootstrap-views', '~> 1.0'
 gem 'stripe', '~> 5.23', '>= 5.23.1'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
@@ -40,7 +41,7 @@ gem 'stripe', '~> 5.23', '>= 5.23.1'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem "dotenv-rails"
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end
 

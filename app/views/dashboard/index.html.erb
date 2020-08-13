@@ -1,3 +1,4 @@
+<script src="https://checkout.stripe.com/v3/checkout.js"></script>
 <div class="jumbotron">
   <% @products.limit(6).each do |product| %>
     <div class="card" style="width: 16rem;">
@@ -5,7 +6,7 @@
       <div class="card-body">
         <h5 class="card-title"><%= product.name %></h5>
         <p class="card-text"><%= number_to_currency(product.price) %></p>
-        <a href="#" class="btn btn-primary">Payment</a>
+        <a href="#" class="btn btn-primary" id="stripe-credit-button" data-price="<%= product.price %>">Payment</a>
       </div>
     </div>
   <% end %>
@@ -23,3 +24,42 @@
     margin: 10px;
   }
 </style>
+
+
+<script>
+  var handler = StripeCheckout.configure({
+    key: "<%= ENV["STRIPE_PUBLIC_KEY"]%>",
+    //image: '/img/documentation/checkout/marketplace.png',
+    locale: "auto",
+    token: function (token) {
+      $.ajax({
+        method: "POST",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("X-CSRF-Token", $("meta[name='csrf-token']").attr("content"));
+        },
+        url: "",
+        data: {
+          token: token.id
+        },
+        success: function (res) {
+
+        }
+      });
+    }
+  });
+
+  $(document).on("click", "#stripe-credit-button", function (e) {
+    var price = $(this).data("price");
+
+    handler.open({
+      name: "Stripe Demo",
+      description: "Demo payment",
+      amount: price * 100
+    });
+    e.preventDefault();
+  });
+
+  $(window).on("popstate", function () {
+    handler.close();
+  });
+</script>
