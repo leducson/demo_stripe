@@ -18,7 +18,6 @@ class StripeIpnController < ApplicationController
       invoice.update_attributes charge_id: event.data.object.id, status: :unpaid
     end
 
-binding.pry
     render nothing: true
   end
 end
