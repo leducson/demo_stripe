@@ -6,17 +6,28 @@ class PaymentController < ApplicationController
     token = params[:token]
 
     begin
-      charge = Stripe::Charge.create(
-        :amount => 10000,
-        :currency => "usd",
-        :source => token,
-        :description => "Example charge",
-        :metadata => {"invoice_number" => "ABCD", "invoice_id" => 1234}
+      @invoice = @product.invoices.create(
+        price: (@product.price * 100),
+        status: :no_invoice_due
       )
 
-      redirect_to stripes_success_index_path
+      charge = Stripe::Charge.create(
+        :amount => @product.price.to_i * 100,
+        :currency => "usd",
+        :source => token,
+        :description => "Payment for #{@product.name}",
+        :metadata => {
+          invoice_id: @invoice.id
+        }
+      )
+
+      redirect_to payments_success_path
     rescue Stripe::CardError => e
-      redirect_to root_path
+      @product.invoices.create(
+        price: (@product.price * 100),
+        status: :cancel
+      )
+      redirect_to payments_cancel_path
     end
   end
 

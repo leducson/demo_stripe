@@ -6,7 +6,10 @@
       <div class="card-body">
         <h5 class="card-title"><%= product.name %></h5>
         <p class="card-text"><%= number_to_currency(product.price) %></p>
-        <a href="#" class="btn btn-primary" id="stripe-credit-button" data-price="<%= product.price %>">Payment</a>
+        <a href="#" class="btn btn-primary" id="stripe-credit-button"
+          data-price="<%= product.price %>" data-id="<%= product.id %>">
+          Payment
+        </a>
       </div>
     </div>
   <% end %>
@@ -27,27 +30,34 @@
 
 
 <script>
-  var handler = StripeCheckout.configure({
-    key: "<%= ENV["STRIPE_PUBLIC_KEY"]%>",
-    //image: '/img/documentation/checkout/marketplace.png',
-    locale: "auto",
-    token: function (token) {
-      $.ajax({
-        method: "POST",
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader("X-CSRF-Token", $("meta[name='csrf-token']").attr("content"));
-        },
-        url: "<%= payment_path() %>",
-        data: {
-          token: token.id
-        }
-      });
-    }
-  });
+  function stripe_checkout(product_id) {
+    var handler = StripeCheckout.configure({
+      key: "<%= ENV["STRIPE_PUBLIC_KEY"]%>",
+      //image: '/img/documentation/checkout/marketplace.png',
+      locale: "auto",
+      token: function (token) {
+        $.ajax({
+          method: "POST",
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader("X-CSRF-Token", $("meta[name='csrf-token']").attr("content"));
+          },
+          url: "<%= payment_path() %>",
+          data: {
+            token: token.id,
+            product_id: product_id
+          }
+        });
+      }
+    });
+
+    return handler;
+  }
 
   $(document).on("click", "#stripe-credit-button", function (e) {
     var price = $(this).data("price");
+    var product_id = $(this).data("id");
 
+    handler = stripe_checkout(product_id);
     handler.open({
       name: "Stripe Demo",
       description: "Demo payment",
