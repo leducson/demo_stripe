@@ -1,0 +1,37 @@
+<table class="table table-striped" style="margin-top: 20px;">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Status</th>
+      <th scope="col">Reason</th>
+      <th scope="col" style="width: 15%"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @invoices.each do |invoice| %>
+      <tr>
+        <th scope="row"><%= "##{invoice.id}" %></th>
+        <td><%= invoice.product_name %></td>
+        <td><%= number_to_currency(invoice.price / 100, precision: 0) %></td>
+        <td>
+          <span class="<%= generate_status(invoice.status.to_sym) %>"><%= invoice.status.titleize %></span>
+        </td>
+        <td><%= invoice.reason %></td>
+        <td style="text-align: center">
+          <% if invoice.no_invoice_due? || invoice.unpaid? || invoice.cancel? %>
+            <button type="button" id="re_payment" data-id="<%= invoice.id %>"
+              data-product-id="<%= invoice.product_id %>" data-price="<%= invoice.price %>"
+              class="btn btn-outline-success btn-sm">
+              Re-Payment
+            </button>
+          <% end %>
+          <% if invoice.paid? %>
+            <button type="button" id="refund" data-id="<%= invoice.id %>" class="btn btn-outline-danger btn-sm">Refund</button>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

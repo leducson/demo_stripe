@@ -5,6 +5,7 @@ class CreateInvoices < ActiveRecord::Migration[5.2]
       t.float :price
       t.integer :product_id
       t.integer :status
+      t.string :reason
 
       t.timestamps
     end

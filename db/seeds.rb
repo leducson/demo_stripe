@@ -7,7 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 i = 1
 price = 50
-10.times do |i|
+6.times do |i|
   i = i + 1
   price = price + 50
   Product.create(name: "Product #{i}", price: price)

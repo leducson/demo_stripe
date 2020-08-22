@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2020_08_20_141452) do
     t.float "price"
     t.integer "product_id"
     t.integer "status"
+    t.string "reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -1,15 +1,19 @@
 class PaymentController < ApplicationController
-  before_action :load_product, only: :create
+  before_action :load_product, :load_invoice, only: :create
 
   def create
     Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
     token = params[:token]
 
     begin
-      @invoice = @product.invoices.create(
-        price: (@product.price * 100),
-        status: :no_invoice_due
-      )
+      if @invoice
+        @invoice.no_invoice_due!
+      else
+        @invoice = @product.invoices.create(
+          price: (@product.price * 100),
+          status: :no_invoice_due
+        )
+      end
 
       charge = Stripe::Charge.create(
         :amount => @product.price.to_i * 100,
@@ -34,5 +38,9 @@ class PaymentController < ApplicationController
   private
   def load_product
     @product = Product.find_by id: params[:product_id]
+  end
+
+  def load_invoice
+    @invoice = Invoice.find_by id: params[:invoice_id]
   end
 end

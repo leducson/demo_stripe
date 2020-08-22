@@ -1,15 +1,20 @@
-<script src="https://checkout.stripe.com/v3/checkout.js"></script>
 <div class="jumbotron">
   <% @products.limit(6).each do |product| %>
     <div class="card" style="width: 16rem;">
       <img src="http://via.placeholder.com/286x180" class="card-img-top">
       <div class="card-body">
         <h5 class="card-title"><%= product.name %></h5>
-        <p class="card-text"><%= number_to_currency(product.price) %></p>
-        <a href="#" class="btn btn-primary" id="stripe-credit-button"
-          data-price="<%= product.price %>" data-id="<%= product.id %>">
-          Payment
-        </a>
+        <p class="card-text"><%= number_to_currency(product.price, precision: 0) %></p>
+        <div class="button_pay d-flex justify-content-between">
+          <a href="#" class="btn btn-primary" id="stripe-credit-button"
+            data-price="<%= product.price %>" data-id="<%= product.id %>">
+            Payment
+          </a>
+          <a href="#" class="btn btn-info" id="stripe-credit-button-subcription"
+            data-price="<%= product.price %>" data-id="<%= product.id %>">
+            Subcription
+          </a>
+        </div>
       </div>
     </div>
   <% end %>
@@ -30,7 +35,7 @@
 
 
 <script>
-  function stripe_checkout(product_id) {
+  function stripe_checkout(product_id = null) {
     var handler = StripeCheckout.configure({
       key: "<%= ENV["STRIPE_PUBLIC_KEY"]%>",
       //image: '/img/documentation/checkout/marketplace.png',
@@ -67,6 +72,7 @@
   });
 
   $(window).on("popstate", function () {
+    handler = stripe_checkout();
     handler.close();
   });
 </script>
