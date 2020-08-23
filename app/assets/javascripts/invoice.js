@@ -22,7 +22,7 @@ $(document).on("click", "#re_payment", function(e) {
 
 function stripe_checkout_function(product_id, invoice_id, path) {
   var handler = StripeCheckout.configure({
-    key: STRIPE_KEY,
+    key: "pk_test_51HDi3rJwBnEGttyRz3qMlpwIyGNLdS8UGRGusrQCN22lj2ERYMxjInP3HVcrelWUStE4RLOd6DanU1qfv861lh3600XJEA7ekD",
     //image: '/img/documentation/checkout/marketplace.png',
     locale: "auto",
     token: function (token) {
@@ -31,7 +31,7 @@ function stripe_checkout_function(product_id, invoice_id, path) {
         beforeSend: function (xhr) {
           xhr.setRequestHeader("X-CSRF-Token", $("meta[name='csrf-token']").attr("content"));
         },
-        url: path,
+        url: "/payment",
         data: {
           token: token.id,
           product_id: product_id,
@@ -54,7 +54,7 @@ $(document).on("click", "#stripe-credit-button-subscription", function(e) {
   var name = $(this).data("name");
 
   var handler = StripeCheckout.configure({
-    key: STRIPE_KEY,
+    key: "pk_test_51HDi3rJwBnEGttyRz3qMlpwIyGNLdS8UGRGusrQCN22lj2ERYMxjInP3HVcrelWUStE4RLOd6DanU1qfv861lh3600XJEA7ekD",
     //image: '/img/documentation/checkout/marketplace.png',
     locale: "auto",
     token: function (token) {
@@ -63,7 +63,7 @@ $(document).on("click", "#stripe-credit-button-subscription", function(e) {
         beforeSend: function (xhr) {
           xhr.setRequestHeader("X-CSRF-Token", $("meta[name='csrf-token']").attr("content"));
         },
-        url: SUBSCRIPTION_PATH,
+        url: "/subcriptions",
         data: {
           token: token.id,
           plan_id: plan_id
