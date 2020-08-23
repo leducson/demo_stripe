@@ -10,17 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_20_141452) do
+ActiveRecord::Schema.define(version: 2020_08_23_133633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "customers", force: :cascade do |t|
+    t.string "customer_stripe_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "invoices", force: :cascade do |t|
     t.string "charge_id"
     t.float "price"
-    t.integer "product_id"
+    t.integer "serviceable_id"
+    t.string "serviceable_type"
+    t.string "name"
     t.integer "status"
     t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "plans", force: :cascade do |t|
+    t.string "plan_stripe_id"
+    t.string "name"
+    t.decimal "price"
+    t.string "interval"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

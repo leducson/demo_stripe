@@ -5,14 +5,28 @@
       <div class="card-body">
         <h5 class="card-title"><%= product.name %></h5>
         <p class="card-text"><%= number_to_currency(product.price, precision: 0) %></p>
-        <div class="button_pay d-flex justify-content-between">
+        <div class="button_pay d-flex justify-content-center">
           <a href="#" class="btn btn-primary" id="stripe-credit-button"
             data-price="<%= product.price %>" data-id="<%= product.id %>">
             Payment
           </a>
-          <a href="#" class="btn btn-info" id="stripe-credit-button-subcription"
-            data-price="<%= product.price %>" data-id="<%= product.id %>">
-            Subcription
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="jumbotron subscription">
+  <% Plan.all.each do |plan| %>
+    <div class="card" style="width: 16rem;">
+      <img src="http://via.placeholder.com/286x180" class="card-img-top">
+      <div class="card-body">
+        <h5 class="card-title"><%= plan.name %></h5>
+        <p class="card-text"><%= number_to_currency(plan.price.to_f, precision: 0) %></p>
+        <div class="button_pay d-flex justify-content-center">
+          <a href="#" class="btn btn-info" id="stripe-credit-button-subscription"
+            data-price="<%= plan.price %>" data-id="<%= plan.id %>" data-name="<%= plan.name %>">
+            <%= "Pay #{number_to_currency(plan.price.to_f, precision: 0)} per / #{plan.interval}"%>
           </a>
         </div>
       </div>
@@ -26,6 +40,10 @@
     flex-wrap: wrap;
     margin-top: 20px;
     justify-content: space-between;
+  }
+
+  .subscription {
+    justify-content: start;
   }
 
   .jumbotron .card {

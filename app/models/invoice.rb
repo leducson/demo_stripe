@@ -1,9 +1,7 @@
 class Invoice < ApplicationRecord
-  belongs_to :product
+  belongs_to :serviceable, polymorphic: true
 
   enum status: [:no_invoice_due, :unpaid, :paid, :refuning, :refuned, :cancel]
-
-  delegate :name, to: :product, prefix: true
 
   scope :newest, -> { order created_at: :desc }
 end

@@ -1,43 +1,43 @@
 class SubcriptionsController < ApplicationController
-  before_action :load_product, only: :create
+  before_action :load_plan, only: :create
 
   def create
-    ActiveRecord::Base.transaction do
-      Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
+    Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
+    token = params[:token]
+    info = Stripe::Token.retrieve(token)
 
-      product = Stripe::Product.create(
-        name: "#{@product.name} - premium Subscription",
-        type: "service"
-      )
+    customer = Stripe::Customer.create(
+      source: token,
+      email: info.email
+    )
 
-      plan = Stripe::Plan.create(
-        amount: @product.price.to_i * 100,
-        interval: "month",
-        product: product.id,
-        currency: "usd",
-        id: "premium-monthly"
-      )
+    @invoice = @plan.invoices.create price: @plan.price, status: :no_invoice_due, name: @plan.name
 
-      customer = Stripe::Customer.retrieve("cus_Hq27N0NRJJnMkl")
+    Stripe::Subscription.create(
+      :customer => customer.id,
+      :metadata => {
+        invoice_id: @invoice.id
+      },
+      :items => [
+        { plan: @plan.plan_stripe_id }
+      ]
+    )
 
-      invoice = @product.invoices.create(
-        price: @product.price * 100,
-        status: :no_invoice_due
-      )
-      Stripe::Subscription.create(
-        customer: customer.id,
-        items: [
-          { plan: "premium-monthly" }
-        ],
-        metadata: {
-          invoice_id: invoice.id
-        }
-      )
-    end
+    redirect_to payments_success_path
+  rescue
+    @plan.invoices.create(
+      price: (@plan.price * 100),
+      status: :cancel
+    )
+    redirect_to payments_cancel_path
   end
 
   private
-  def load_product
-    @product = Product.find_by id: params[:product_id]
+  def load_plan
+    @plan = Plan.find_by id: params[:plan_id]
+  end
+
+  def get_token_info
+    info = Stripe::Token.retrieve(token)
   end
 end

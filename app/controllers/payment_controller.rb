@@ -11,7 +11,8 @@ class PaymentController < ApplicationController
       else
         @invoice = @product.invoices.create(
           price: (@product.price * 100),
-          status: :no_invoice_due
+          status: :no_invoice_due,
+          name: @product.name
         )
       end
 

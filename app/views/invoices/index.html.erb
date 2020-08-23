@@ -3,6 +3,7 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Product Name</th>
+      <th scope="col">Plan</th>
       <th scope="col">Price</th>
       <th scope="col">Status</th>
       <th scope="col">Reason</th>
@@ -13,7 +14,8 @@
     <% @invoices.each do |invoice| %>
       <tr>
         <th scope="row"><%= "##{invoice.id}" %></th>
-        <td><%= invoice.product_name %></td>
+        <td><%= invoice.name %></td>
+        <td><%= invoice.serviceable_type %></td>
         <td><%= number_to_currency(invoice.price / 100, precision: 0) %></td>
         <td>
           <span class="<%= generate_status(invoice.status.to_sym) %>"><%= invoice.status.titleize %></span>
@@ -22,7 +24,7 @@
         <td style="text-align: center">
           <% if invoice.no_invoice_due? || invoice.unpaid? || invoice.cancel? %>
             <button type="button" id="re_payment" data-id="<%= invoice.id %>"
-              data-product-id="<%= invoice.product_id %>" data-price="<%= invoice.price %>"
+              data-product-id="<%= invoice.serviceable_id %>" data-price="<%= invoice.price %>"
               class="btn btn-outline-success btn-sm">
               Re-Payment
             </button>

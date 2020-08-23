@@ -48,14 +48,33 @@ $(window).on("popstate", function () {
   handler.close();
 });
 
-$(document).on("click", "#stripe-credit-button-subcription", function(e) {
-  var product_id = $(this).data("id");
+$(document).on("click", "#stripe-credit-button-subscription", function(e) {
+  var plan_id = $(this).data("id");
   var price = $(this).data("price");
+  var name = $(this).data("name");
 
-  handler = stripe_checkout_function(product_id, null, SUBSCRIPTION_PATH);
+  var handler = StripeCheckout.configure({
+    key: STRIPE_KEY,
+    //image: '/img/documentation/checkout/marketplace.png',
+    locale: "auto",
+    token: function (token) {
+      $.ajax({
+        method: "POST",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("X-CSRF-Token", $("meta[name='csrf-token']").attr("content"));
+        },
+        url: SUBSCRIPTION_PATH,
+        data: {
+          token: token.id,
+          plan_id: plan_id
+        }
+      });
+    }
+  });
+
   handler.open({
     name: "Stripe Demo",
-    description: "Subcription Monthly",
+    description: name,
     amount: price * 100
   });
   e.preventDefault();

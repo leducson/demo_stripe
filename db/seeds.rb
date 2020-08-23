@@ -1,10 +1,5 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+User.create email: "le.duc.son@sun-asterisk.com", password: "Aa@123456"
+
 i = 1
 price = 50
 6.times do |i|
@@ -12,3 +7,34 @@ price = 50
   price = price + 50
   Product.create(name: "Product #{i}", price: price)
 end
+Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
+
+product = Stripe::Product.create(
+  name: "Basic Plan",
+  type: "service"
+)
+
+plan = Stripe::Plan.create(
+  amount: 30000,
+  interval: "month",
+  product: product.id,
+  currency: "usd",
+  id: "basic_plan_3"
+)
+
+Plan.create(name: product.name, plan_stripe_id: plan.id, price: plan.amount.to_f / 100, interval: "month")
+
+product = Stripe::Product.create(
+  name: "Gold Plan",
+  type: "service"
+)
+
+plan = Stripe::Plan.create(
+  amount: 60000,
+  interval: "year",
+  product: product.id,
+  currency: "usd",
+  id: "gold_plan_3"
+)
+
+Plan.create(name: product.name, plan_stripe_id: plan.id, price: plan.amount.to_f / 100, interval: "year")
