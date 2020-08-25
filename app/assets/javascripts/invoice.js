@@ -11,7 +11,7 @@ $(document).on("click", "#re_payment", function(e) {
   var product_id = $(this).data("product-id");
   var price = $(this).data("price");
 
-  handler = stripe_checkout_function(product_id, invoice_id, PAYMENT_PATH);
+  handler = stripe_checkout_function(product_id, invoice_id);
   handler.open({
     name: "Stripe Demo",
     description: "Demo payment",
@@ -20,7 +20,7 @@ $(document).on("click", "#re_payment", function(e) {
   e.preventDefault();
 });
 
-function stripe_checkout_function(product_id, invoice_id, path) {
+function stripe_checkout_function(product_id, invoice_id) {
   var handler = StripeCheckout.configure({
     key: "pk_test_51HDi3rJwBnEGttyRz3qMlpwIyGNLdS8UGRGusrQCN22lj2ERYMxjInP3HVcrelWUStE4RLOd6DanU1qfv861lh3600XJEA7ekD",
     //image: '/img/documentation/checkout/marketplace.png',
