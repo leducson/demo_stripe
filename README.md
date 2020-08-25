@@ -1,24 +1,11 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Demo thanh toán sử dụng `Stripe`<br>
 
-Things you may want to cover:
+- Signle payment
+- Callback webhook
+- Subscription
+- Refund
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+[Heroku](https://lit-fortress-74589.herokuapp.com/)<br>
+(User: le.duc.son@sun-asterisk.com/Aa@123456)
